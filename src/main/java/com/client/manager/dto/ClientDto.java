@@ -1,5 +1,6 @@
 package com.client.manager.dto;
 
+import com.client.manager.model.entity.Discount;
 import com.client.manager.model.enums.ClientStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class ClientDto {
     private LocalDate created;
     private LocalDate updated;
     private Long discountId;
+    private Discount discount;
 
     public ClientDto() {
         // Default constructor
