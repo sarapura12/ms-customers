@@ -1,27 +1,30 @@
 package com.client.manager.dto;
 
+import com.client.manager.model.enums.ClientStatus;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class ClientDto {
-    private Integer clientId;
+    private Long clientId;
     private String name;
     private String lastName;
     private String email;
     private String phone;
     private byte[] photo;
-    private String state;
-    private String created;
-    private String updated;
+    private ClientStatus state;
+    private LocalDate created;
+    private LocalDate updated;
     private Long discountId;
 
     public ClientDto() {
         // Default constructor
     }
 
-    public ClientDto(Integer clientId, String name, String lastName, String email, String phone, byte[] photo, String state, String created, String updated, Long discountId) {
+    public ClientDto(Long clientId, String name, String lastName, String email, String phone, byte[] photo, ClientStatus state, LocalDate created, LocalDate updated, Long discountId) {
         this.clientId = clientId;
         this.name = name;
         this.lastName = lastName;

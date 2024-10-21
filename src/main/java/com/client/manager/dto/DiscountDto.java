@@ -1,23 +1,26 @@
 package com.client.manager.dto;
 
+import com.client.manager.model.enums.DiscountType;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class DiscountDto {
-    private Long id;
+    private Long discountId;
     private Double percentage;
-    private String expirationDate;
-    private String discountType;
-    private Integer clientId;
+    private LocalDate expirationDate;
+    private DiscountType discountType;
+    private Long clientId;
 
     public DiscountDto() {
         // Default constructor
     }
 
-    public DiscountDto(Long id, Double percentage, String expirationDate, String discountType, Integer clientId) {
-        this.id = id;
+    public DiscountDto(Long discountId, Double percentage, LocalDate expirationDate, DiscountType discountType, Long clientId) {
+        this.discountId = discountId;
         this.percentage = percentage;
         this.expirationDate = expirationDate;
         this.discountType = discountType;
