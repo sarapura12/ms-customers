@@ -27,9 +27,9 @@ public class Client {
     @Enumerated(EnumType.STRING)
     private ClientStatus state;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private LocalDate created;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private LocalDate updated;
 
     @OneToOne(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

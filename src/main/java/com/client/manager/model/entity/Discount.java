@@ -15,7 +15,7 @@ public class Discount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long discoundId;
 
     private Double percentage;
     @Temporal(TemporalType.DATE)
