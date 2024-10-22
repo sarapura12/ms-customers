@@ -35,11 +35,12 @@ public class Client {
     @OneToOne(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Discount discount;
 
-    public void setDiscount(Discount discount) {
+    public Discount setDiscount(Discount discount) {
         this.discount = discount;
         if (discount != null) {
             discount.setClient(this);
         }
+        return this.discount;
     }
 
     public void removeDiscount() {
