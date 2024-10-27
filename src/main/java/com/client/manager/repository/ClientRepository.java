@@ -5,22 +5,19 @@ import com.client.manager.model.entity.Discount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository <Client,Long> {
 
-    Integer countByPhone (String phone);
+    Optional <Client> findClientByPhone (String phone);
 
-    Integer countByEmail (String email);
+    Optional <Client> findClientByEmail (String email);
 
-    Integer countClientByClientId(Long clientId);
+    Optional <Client> findClientByClientId(Long clientId);
 
-    Client findClientByEmail(String email);
+    Optional <Client> findClientByName(String name);
 
-    List<Client> findClientByName(String name);
+    Optional <Client> findClientByLastName(String lastName);
 
-    List<Client> findClientByLastName(String lastName);
-
-    Client findByClientId (Long clientId);
-
-    Discount setDiscountIdByClientId(Long clientId, Long discountId);
+    //Discount setDiscountIdByClientId(Long clientId, Long discountId);
 }

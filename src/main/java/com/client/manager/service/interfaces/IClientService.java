@@ -1,7 +1,9 @@
 package com.client.manager.service.interfaces;
 
 import com.client.manager.dto.ClientDto;
+import com.client.manager.dto.DiscountDto;
 import com.client.manager.model.entity.Client;
+import com.client.manager.model.entity.Discount;
 
 import java.util.List;
 
@@ -13,8 +15,6 @@ public interface IClientService {
 
     void deleteClientById(Long id);
 
-    Client getClientById(Long id);
-
     List<Client> getAllClients();
 
     List<Client> getClientByName(String name);
@@ -22,5 +22,13 @@ public interface IClientService {
     List<Client> getClientByLastName(String lastName);
 
     Client getClientByEmail(String email);
+
+    Client getClientById(Long id);
+
+    Client getClientByPhone(String phone);
+
+    Client setDiscount(Long id, DiscountDto discount);
+
+    Client deleteDiscount(Long id);
 
 }

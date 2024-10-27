@@ -38,4 +38,6 @@ public class ClientDto {
         this.updated = updated;
         this.discountId = discountId;
     }
+
+    
 }
