@@ -5,11 +5,11 @@ import com.client.manager.model.enums.DiscountType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
 
 
-    List<Discount> findAll();
-    List<Discount> findAllByDiscountType(DiscountType discountType);
-    Discount findByDiscoundId(Long discountId);
+    Optional<Discount> findAllByDiscountType(DiscountType discountType);
+    Optional<Discount> findByDiscoundId(Long discountId);
 }

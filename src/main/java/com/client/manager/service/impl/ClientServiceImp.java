@@ -10,6 +10,7 @@ import com.client.manager.model.entity.Discount;
 import com.client.manager.repository.ClientRepository;
 import com.client.manager.repository.DiscountRepository;
 import com.client.manager.service.interfaces.IClientService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -94,6 +95,7 @@ public class ClientServiceImp implements IClientService {
                 .get(0);
     }
 
+    @Transactional
     public Client setDiscount (Long clientId, DiscountDto discountDto){
         Client client = clientRepository.findClientByClientId(clientId)
                 .map(List::of)
@@ -110,6 +112,7 @@ public class ClientServiceImp implements IClientService {
         return clientRepository.save(client);
     }
 
+    @Transactional
     public Client deleteDiscount (Long clientId){
         Client client = clientRepository.findClientByClientId(clientId)
                 .map(List::of)
