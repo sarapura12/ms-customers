@@ -13,8 +13,6 @@ public interface IClientService {
 
     void deleteClientById(Long id);
 
-    Client getClientById(Long id);
-
     List<Client> getAllClients();
 
     List<Client> getClientByName(String name);
@@ -22,5 +20,9 @@ public interface IClientService {
     List<Client> getClientByLastName(String lastName);
 
     Client getClientByEmail(String email);
+
+    Client getClientById(Long id);
+
+    Client getClientByPhone(String email);
 
 }

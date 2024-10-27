@@ -9,7 +9,7 @@ import java.util.List;
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
 
 
-    List<Discount> getAll();
+    List<Discount> findAll();
     List<Discount> findAllByDiscountType(DiscountType discountType);
-    Discount findByDiscountId(Long discountId);
+    Discount findByDiscoundId(Long discountId);
 }
