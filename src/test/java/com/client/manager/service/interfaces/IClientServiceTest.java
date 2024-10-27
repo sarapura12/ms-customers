@@ -1,8 +1,10 @@
 package com.client.manager.service.interfaces;
 
 import com.client.manager.dto.ClientDto;
+import com.client.manager.dto.DiscountDto;
 import com.client.manager.mapper.ClientMapper;
 import com.client.manager.model.entity.Client;
+import com.client.manager.model.enums.DiscountType;
 import com.client.manager.service.impl.ClientServiceImp;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +28,8 @@ class IClientServiceTest {
     private ClientDto testClientDto2;
     private ClientDto testClientDto3;
 
+    private DiscountDto testDiscountDto= new DiscountDto();
+
     @BeforeEach
     void setUp() {
         testClientDto = new ClientDto();
@@ -40,12 +44,15 @@ class IClientServiceTest {
         testClientDto2.setEmail("joaquinsalas@example.com");
         testClientDto2.setPhone("9876543210");
 
-
         testClientDto3 = new ClientDto();
         testClientDto3.setName("Pablo");
         testClientDto3.setLastName("Sarapura");
         testClientDto3.setEmail("pablo@example.com");
         testClientDto3.setPhone("1234567890");
+
+        testDiscountDto.setDiscountType(DiscountType.FIXED);
+        testDiscountDto.setPercentage(10D);
+
     }
 
 
@@ -138,6 +145,40 @@ class IClientServiceTest {
         assertNotNull(client);
 
         clientService.deleteClientById(createdCLient.getClientId());
+    }
+
+    @Test
+    void getClientByPhone() {
+        System.out.println("getClientByPhone");
+        Client createdCLient =clientService.createClient(testClientDto);
+        Client client = clientService.getClientByPhone("1234567890");
+        assertNotNull(client);
+
+        clientService.deleteClientById(createdCLient.getClientId());
+    }
+
+    @Test
+    void setDiscount() {
+
+        Client createdCLient =clientService.createClient(testClientDto);
+        Client clientWithDiscount = clientService.setDiscount(createdCLient.getClientId(), testDiscountDto);
+
+        assertNotNull(clientWithDiscount.getDiscount().getDiscoundId());
+
+        clientService.deleteClientById(createdCLient.getClientId());
+    }
+
+    @Test
+    void deleteDiscount() {
+
+        Client createdCLient =clientService.createClient(testClientDto);
+        Client clientWithDiscount = clientService.setDiscount(createdCLient.getClientId(), testDiscountDto);
+
+        Client clientWhithoutDiscount = clientService.deleteDiscount(clientWithDiscount.getClientId());
+
+        assertNull(clientWhithoutDiscount.getDiscount());
+        clientService.deleteClientById(createdCLient.getClientId());
+
     }
 
 

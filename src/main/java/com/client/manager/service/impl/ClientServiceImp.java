@@ -8,6 +8,7 @@ import com.client.manager.mapper.DiscountMapper;
 import com.client.manager.model.entity.Client;
 import com.client.manager.model.entity.Discount;
 import com.client.manager.repository.ClientRepository;
+import com.client.manager.repository.DiscountRepository;
 import com.client.manager.service.interfaces.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class ClientServiceImp implements IClientService {
 
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private DiscountRepository discountRepository;
     @Autowired
     private ClientMapper clientMapper;
     @Autowired
@@ -84,28 +87,37 @@ public class ClientServiceImp implements IClientService {
     }
 
     @Override
-    public Client getClientByPhone(String email) {
-        return null;
+    public Client getClientByPhone(String phone) {
+        return clientRepository.findClientByPhone(phone)
+                .map(List::of)
+                .orElseThrow(() -> new InvalidOperationException("Client", phone, "Client not found"))
+                .get(0);
     }
 
-    public Discount setDiscount (Long clientId, DiscountDto discountDto){
+    public Client setDiscount (Long clientId, DiscountDto discountDto){
         Client client = clientRepository.findClientByClientId(clientId)
                 .map(List::of)
                 .orElseThrow(() -> new InvalidOperationException("Client", clientId, "Client not found"))
                 .get(0);
 
-        client.setDiscount(discountMapper.toEntity(discountDto));
-        return clientRepository.save(client).getDiscount();
+        Discount discountEntity=discountMapper.toEntity(discountDto);
+        discountEntity.setClient(client);
+        Discount discountSave = discountRepository.save(discountEntity);
+
+        client.setDiscount(discountSave);
+
+
+        return clientRepository.save(client);
     }
 
-    public void deleteDiscount (Long clientId){
+    public Client deleteDiscount (Long clientId){
         Client client = clientRepository.findClientByClientId(clientId)
                 .map(List::of)
                 .orElseThrow(() -> new InvalidOperationException("Client", clientId, "Client not found"))
                 .get(0);
 
         client.removeDiscount();
-        clientRepository.save(client);
+        return clientRepository.save(client);
     }
 
 
