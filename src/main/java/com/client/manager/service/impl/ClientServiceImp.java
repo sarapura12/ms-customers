@@ -34,7 +34,7 @@ public class ClientServiceImp implements IClientService {
 
         var alreadyExist = clientRepository.findClientByPhone(clientDto.getPhone()).isPresent() || clientRepository.findClientByEmail(clientDto.getEmail()).isPresent();
         if (alreadyExist)
-            throw new InvalidOperationException("Client", clientDto.getClientId(), "Client already exists");
+            throw new InvalidOperationException("Client", clientDto.getClientId(), "Phone or email already exists");
 
         var newClient = new Client();
         newClient.setName(clientDto.getName());
@@ -61,7 +61,7 @@ public class ClientServiceImp implements IClientService {
         if (!client.getEmail().equals(clientDto.getEmail())) {
             var repeatEmail = clientRepository.findClientByEmail(clientDto.getEmail()).isPresent();
             if (repeatEmail)
-                throw new InvalidOperationException("Client", clientDto.getEmail(), "Client already exists");
+                throw new InvalidOperationException("Client", clientDto.getEmail(), "Email already exists");
 
             client.setEmail(clientDto.getEmail());
         }
@@ -69,7 +69,7 @@ public class ClientServiceImp implements IClientService {
         if (!client.getPhone().equals(clientDto.getPhone())) {
             var repeatPhone = clientRepository.findClientByPhone(clientDto.getPhone()).isPresent();
             if (repeatPhone)
-                throw new InvalidOperationException("Client", clientDto.getPhone(), "Client already exists");
+                throw new InvalidOperationException("Client", clientDto.getPhone(), "Phone already exists");
 
             client.setPhone(clientDto.getPhone());
         }
