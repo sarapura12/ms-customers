@@ -5,9 +5,12 @@ import com.client.manager.dto.DiscountDto;
 import com.client.manager.model.entity.Client;
 import com.client.manager.service.interfaces.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -82,4 +85,18 @@ public class ClientController {
         Client client = clientService.deleteDiscount(clientId);
         return ResponseEntity.ok(client);
     }
+
+    @PostMapping("/{clientId}/uploadPhoto")
+    public ResponseEntity<String> uploadPhoto(@PathVariable Long clientId, @RequestParam("photo") MultipartFile photo) {
+        try {
+            byte[] photoBytes = photo.getBytes();
+            Client client = clientService.uploadPhoto(clientId, photoBytes);
+            client.setPhoto(null);
+            return ResponseEntity.ok("Photo uploaded successfully");
+            //return ResponseEntity.ok(client);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

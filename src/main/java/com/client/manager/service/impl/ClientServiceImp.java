@@ -130,6 +130,13 @@ public class ClientServiceImp implements IClientService {
         return clientRepository.save(client);
     }
 
+    @Transactional
+    @Override
+    public Client uploadPhoto(Long id, byte[] photo) {
+        Client client = clientRepository.findById(id).orElseThrow(() -> new InvalidOperationException("Client", id, "Client not found"));
+        client.setPhoto(photo);
+        return clientRepository.save(client);
+    }
 
 
 }

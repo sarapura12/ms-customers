@@ -31,4 +31,6 @@ public interface IClientService {
 
     Client deleteDiscount(Long id);
 
+    Client uploadPhoto(Long id, byte[] photo);
+
 }
