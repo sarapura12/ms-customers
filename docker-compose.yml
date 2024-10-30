@@ -4,8 +4,6 @@ services:
   api_service:
     build: .
     container_name: ms-clients
-    expose:
-      - "8081"
     ports:
       - "8081:8081"
     environment:

@@ -89,7 +89,7 @@ class ClientServiceImpTest {
         Client createdClient = clientService.createClient(clientDto);
 
         assertNotNull(createdClient);
-        assertEquals("John", createdClient.getName());
+        assertEquals("Pablo", createdClient.getName());
         verify(clientRepository, times(1)).save(any(Client.class));
     }
 
@@ -101,7 +101,7 @@ class ClientServiceImpTest {
             clientService.createClient(clientDto);
         });
 
-        assertEquals("Client already exists", exception.getMessage());
+        assertEquals("Phone or email already exists", exception.getMessage());
         verify(clientRepository, times(0)).save(any(Client.class));
     }
 
