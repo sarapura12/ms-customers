@@ -17,7 +17,7 @@ public class DiscountController {
     @Autowired
     private IDiscountService discountService;
 
-    @GetMapping
+    @GetMapping("/searchAll")
     public ResponseEntity<List<Discount>> getAllDiscounts() {
         List<Discount> discounts = discountService.findAllDiscounts();
         return ResponseEntity.ok(discounts);

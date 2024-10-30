@@ -2,6 +2,7 @@ package com.client.manager.model.entity;
 
 
 import com.client.manager.model.enums.DiscountType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class Discount {
 
     @OneToOne
     @JoinColumn(name = "client_id")
+    @JsonIgnore
     private Client client;
 
 }

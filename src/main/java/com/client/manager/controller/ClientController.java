@@ -1,6 +1,7 @@
 package com.client.manager.controller;
 
 import com.client.manager.dto.ClientDto;
+import com.client.manager.dto.DiscountDto;
 import com.client.manager.model.entity.Client;
 import com.client.manager.service.interfaces.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class ClientController {
     @Autowired
     private IClientService clientService;
 
-    @PostMapping
+    @PostMapping("/new/")
     public ResponseEntity<Client> createClient(@RequestBody ClientDto clientDto) {
         Client createdClient = clientService.createClient(clientDto);
         return ResponseEntity.ok(createdClient);
@@ -67,6 +68,18 @@ public class ClientController {
     @GetMapping("/search/ByPhone")
     public ResponseEntity<Client> getClientByPhone(@RequestParam String phone) {
         Client client = clientService.getClientByPhone(phone);
+        return ResponseEntity.ok(client);
+    }
+
+    @PostMapping("/{clientId}/discount")
+    public ResponseEntity<Client> setDiscount(@PathVariable Long clientId, @RequestBody DiscountDto discountDto) {
+        Client client = clientService.setDiscount(clientId, discountDto);
+        return ResponseEntity.ok(client);
+    }
+
+    @DeleteMapping("/{clientId}/discount")
+    public ResponseEntity<Client> deleteDiscount(@PathVariable Long clientId) {
+        Client client = clientService.deleteDiscount(clientId);
         return ResponseEntity.ok(client);
     }
 }
