@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -33,6 +34,7 @@ public class ClientServiceImp implements IClientService {
 
         if ((clientDto.getClientId()==null)&&(clientRepository.findClientByPhone(clientDto.getPhone()).isEmpty())
                 &&(clientRepository.findClientByEmail(clientDto.getEmail()).isEmpty())){
+            clientDto.setCreated(LocalDate.now());
             return clientRepository.save(clientMapper.toEntity(clientDto));
         }else{
             throw new InvalidOperationException("Client", clientDto.getClientId(), "Client already exists");
@@ -44,9 +46,10 @@ public class ClientServiceImp implements IClientService {
 
         clientRepository.findClientByPhone(clientDto.getPhone()).orElseThrow(() -> new InvalidOperationException("Client", clientDto.getPhone(), "Client already exists"));
         clientRepository.findClientByEmail(clientDto.getEmail()).orElseThrow(() -> new InvalidOperationException("Client", clientDto.getEmail(), "Client already exists"));
-        clientRepository.findClientByClientId(id).orElseThrow(() -> new InvalidOperationException("Client", id, "Client not found"));
+        clientDto.setCreated(clientRepository.findClientByClientId(id).orElseThrow(() -> new InvalidOperationException("Client", id, "Client not found")).getCreated());
 
         clientDto.setClientId(id);
+        clientDto.setUpdated(LocalDate.now());
         return clientRepository.save(clientMapper.toEntity(clientDto));
 
     }
@@ -119,7 +122,11 @@ public class ClientServiceImp implements IClientService {
                 .orElseThrow(() -> new InvalidOperationException("Client", clientId, "Client not found"))
                 .get(0);
 
+        Long value=client.getDiscount().getDiscoundId();
+
         client.removeDiscount();
+
+        discountRepository.deleteById(value);
         return clientRepository.save(client);
     }
 
