@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  api_service:
+    build: .
+    container_name: ms-clients
+    ports:
+      - "8081:8081"
+    environment:
+      JDBC_DATABASE_URL: jdbc:mysql://msclientsDB:3306/clientsDB?createDatabaseIfNotExist=true&autoReconnect=true&serverTimeZone=GMT-3
+      JDBC_DATABASE_USERNAME: root
+      JDBC_DATABASE_PASSWORD: admin
+    restart: always
+    networks:
+      - client_app
+    depends_on:
+      - msclientsDB
+
+  msclientsDB:
+    image: mysql:latest
+    expose:
+      - "3307"
+    ports:
+      - "3307:3307"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: clientsDB
+    networks:
+      - client_app
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 2s
+      retries: 10
+      timeout: 10s
+    restart: always
+
+networks:
+  client_app:
+    driver: bridge

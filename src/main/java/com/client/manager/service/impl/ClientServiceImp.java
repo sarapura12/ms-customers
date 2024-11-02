@@ -3,6 +3,7 @@ package com.client.manager.service.impl;
 import com.client.manager.dto.ClientDto;
 import com.client.manager.dto.DiscountDto;
 import com.client.manager.exception.InvalidOperationException;
+import com.client.manager.exception.ResourceNotFoundException;
 import com.client.manager.mapper.ClientMapper;
 import com.client.manager.mapper.DiscountMapper;
 import com.client.manager.model.entity.Client;
@@ -31,39 +32,69 @@ public class ClientServiceImp implements IClientService {
 
     public Client createClient(ClientDto clientDto) {
 
+        var alreadyExist = clientRepository.findClientByPhone(clientDto.getPhone()).isPresent() || clientRepository.findClientByEmail(clientDto.getEmail()).isPresent();
+        if (alreadyExist)
+            throw new InvalidOperationException("Client", clientDto.getClientId(), "Phone or email already exists");
 
-        if ((clientDto.getClientId()==null)&&(clientRepository.findClientByPhone(clientDto.getPhone()).isEmpty())
-                &&(clientRepository.findClientByEmail(clientDto.getEmail()).isEmpty())){
-            clientDto.setCreated(LocalDate.now());
-            return clientRepository.save(clientMapper.toEntity(clientDto));
-        }else{
-            throw new InvalidOperationException("Client", clientDto.getClientId(), "Client already exists");
-        }
+        var newClient = new Client();
+        newClient.setName(clientDto.getName());
+        newClient.setLastName(clientDto.getLastName());
+        newClient.setEmail(clientDto.getEmail());
+        newClient.setPhone(clientDto.getPhone());
+        newClient.setCreated(LocalDate.now());
+        newClient.setState(clientDto.getState());
+        clientRepository.save(newClient);
+
+        return newClient;
     }
 
     @Override
     public Client updateClient(Long id, ClientDto clientDto) {
+        var client = clientRepository.findClientByClientId(id).orElseThrow(() -> new InvalidOperationException("Client", id, "Client not found"));
 
-        clientRepository.findClientByPhone(clientDto.getPhone()).orElseThrow(() -> new InvalidOperationException("Client", clientDto.getPhone(), "Client already exists"));
-        clientRepository.findClientByEmail(clientDto.getEmail()).orElseThrow(() -> new InvalidOperationException("Client", clientDto.getEmail(), "Client already exists"));
-        clientDto.setCreated(clientRepository.findClientByClientId(id).orElseThrow(() -> new InvalidOperationException("Client", id, "Client not found")).getCreated());
+        if (!client.getName().equals(clientDto.getName()))
+            client.setName(clientDto.getName());
 
-        clientDto.setClientId(id);
+        if (!client.getLastName().equals(clientDto.getLastName()))
+            client.setLastName(clientDto.getLastName());
+
+        if (!client.getEmail().equals(clientDto.getEmail())) {
+            var repeatEmail = clientRepository.findClientByEmail(clientDto.getEmail()).isPresent();
+            if (repeatEmail)
+                throw new InvalidOperationException("Client", clientDto.getEmail(), "Email already exists");
+
+            client.setEmail(clientDto.getEmail());
+        }
+
+        if (!client.getPhone().equals(clientDto.getPhone())) {
+            var repeatPhone = clientRepository.findClientByPhone(clientDto.getPhone()).isPresent();
+            if (repeatPhone)
+                throw new InvalidOperationException("Client", clientDto.getPhone(), "Phone already exists");
+
+            client.setPhone(clientDto.getPhone());
+        }
+
+        if (!client.getState().equals(clientDto.getState()))
+            client.setState(clientDto.getState());
+
+        client.setUpdated(LocalDate.now());
+
         clientDto.setUpdated(LocalDate.now());
-        return clientRepository.save(clientMapper.toEntity(clientDto));
 
+        clientRepository.save(client);
+        return client;
     }
 
     @Override
     public void deleteClientById(Long id) {
-        clientRepository.findClientByClientId(id).orElseThrow(() -> new InvalidOperationException("Client", id, "Client not found"));
+        clientRepository.findClientByClientId(id).orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
         clientRepository.deleteById(id);
     }
 
     @Override
     public Client getClientById(Long id) {
 
-        return clientRepository.findClientByClientId(id).orElseThrow(() -> new InvalidOperationException("Client", id, "Client not found"));
+        return clientRepository.findClientByClientId(id).orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
     }
 
     @Override
@@ -73,7 +104,7 @@ public class ClientServiceImp implements IClientService {
 
     @Override
     public List<Client> getClientByName(String name) {
-         return clientRepository.findClientByName(name).stream().toList();
+        return clientRepository.findClientByName(name).stream().toList();
     }
 
     @Override
@@ -85,7 +116,7 @@ public class ClientServiceImp implements IClientService {
     public Client getClientByEmail(String email) {
         return clientRepository.findClientByEmail(email)
                 .map(List::of)
-                .orElseThrow(() -> new InvalidOperationException("Client", email, "Client not found"))
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email))
                 .get(0);
 
     }
@@ -99,13 +130,13 @@ public class ClientServiceImp implements IClientService {
     }
 
     @Transactional
-    public Client setDiscount (Long clientId, DiscountDto discountDto){
+    public Client setDiscount(Long clientId, DiscountDto discountDto) {
         Client client = clientRepository.findClientByClientId(clientId)
                 .map(List::of)
                 .orElseThrow(() -> new InvalidOperationException("Client", clientId, "Client not found"))
                 .get(0);
 
-        Discount discountEntity=discountMapper.toEntity(discountDto);
+        Discount discountEntity = discountMapper.toEntity(discountDto);
         discountEntity.setClient(client);
         Discount discountSave = discountRepository.save(discountEntity);
 
@@ -116,13 +147,13 @@ public class ClientServiceImp implements IClientService {
     }
 
     @Transactional
-    public Client deleteDiscount (Long clientId){
+    public Client deleteDiscount(Long clientId) {
         Client client = clientRepository.findClientByClientId(clientId)
                 .map(List::of)
                 .orElseThrow(() -> new InvalidOperationException("Client", clientId, "Client not found"))
                 .get(0);
 
-        Long value=client.getDiscount().getDiscoundId();
+        Long value = client.getDiscount().getDiscoundId();
 
         client.removeDiscount();
 

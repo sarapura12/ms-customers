@@ -4,7 +4,6 @@ import com.client.manager.dto.ClientDto;
 import com.client.manager.dto.DiscountDto;
 import com.client.manager.model.entity.Client;
 import com.client.manager.service.interfaces.IClientService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,13 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/api/clients")
 public class ClientController {
+    private final IClientService clientService;
 
-    @Autowired
-    private IClientService clientService;
+    public ClientController(IClientService clientService) {
+        this.clientService = clientService;
+    }
 
     @PostMapping("/new/")
     public ResponseEntity<Client> createClient(@RequestBody ClientDto clientDto) {

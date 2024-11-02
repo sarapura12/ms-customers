@@ -1,6 +1,5 @@
 package com.client.manager.controller;
 
-import com.client.manager.dto.DiscountDto;
 import com.client.manager.model.entity.Discount;
 import com.client.manager.model.enums.DiscountType;
 import com.client.manager.service.interfaces.IDiscountService;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/discounts")
+@RequestMapping("/api/discounts")
 public class DiscountController {
 
     @Autowired
