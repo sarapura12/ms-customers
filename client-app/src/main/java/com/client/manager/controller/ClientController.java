@@ -21,7 +21,7 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @PostMapping("/new/")
+    @PostMapping
     public ResponseEntity<Client> createClient(@RequestBody ClientDto clientDto) {
         Client createdClient = clientService.createClient(clientDto);
         return ResponseEntity.ok(createdClient);
